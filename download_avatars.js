@@ -1,4 +1,5 @@
 var request = require('request');
+var fs = require('fs');
 
 var GITHUB_USER = 'turquoisemelon';
 var GITHUB_TOKEN = 'c870aa54065387d127ffcc86d26f81c905e9e9b2';
@@ -25,6 +26,21 @@ function getRepoContributors(repoOwner, repoName, cb) {
       cb(json);
     }
   })
+}
+
+function downloadImageByURL(url, filePath) {
+  request.get(url)
+  .on('error', function (err) {
+    throw err;
+  })
+  .on('response', function (response) {
+    console.log('Response Status Code: ', response.statusCode);
+    console.log('Downloading image...');
+  })
+  .pipe(fs.createWriteStream(filePath))
+  .on('finish', function() {
+    console.log('Download complete.');
+  });
 }
 
 getRepoContributors('jquery', 'jquery', function(something) {
