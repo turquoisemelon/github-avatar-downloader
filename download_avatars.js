@@ -45,6 +45,8 @@ function downloadImageByURL(url, filePath) {
 
 getRepoContributors('jquery', 'jquery', function(something) {
   for (var elem of something) {
-    console.log('Avatar_url: ', elem.avatar_url);
+    var file_path = `avatars/${elem.login}`
+    var avatar_url = elem.avatar_url;
+    downloadImageByURL(avatar_url, file_path);
   }
 });
