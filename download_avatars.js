@@ -20,13 +20,15 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
     if (response.statusCode == 200) {
       console.log('Response Status Code: ', response.statusCode);
-      console.log('Options: ', options);
-      console.log('Got body: ', body);
-      cb(body);
+      var json = JSON.parse(body);
+      console.log('Parsed json is: ', json);
+      cb(json);
     }
   })
 }
 
 getRepoContributors('jquery', 'jquery', function(something) {
-  console.log('The body is: ', something);
+  for (var elem of something) {
+    console.log('Avatar_url: ', elem.avatar_url);
+  }
 });
