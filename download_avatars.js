@@ -18,18 +18,15 @@ function getRepoContributors(repoOwner, repoName, cb) {
   };
 
   request.get(options, function(error, response, body) {
-
     if (error) {
       console.log('Got an error: ', error);
       return;
     }
-
     if (response.statusCode == 200) {
       console.log('Response Status Code: ', response.statusCode);
       var json = JSON.parse(body);
       cb(json);
     }
-    
   })
 }
 
@@ -40,6 +37,7 @@ function downloadImageByURL(url, filePath) {
   })
   .on('response', function (response) {
     console.log('Response Status Code: ', response.statusCode);
+    console.log('Downloading the image...');
   })
   .pipe(fs.createWriteStream(filePath))
   .on('finish', function() {
@@ -48,11 +46,9 @@ function downloadImageByURL(url, filePath) {
 }
 
 getRepoContributors(process.argv[2], process.argv[3], function(something) {
-
   for (var elem of something) {
-    var file_path = `avatars/${elem.login}`
+    var file_path = `avatars/${elem.login}.jpg`
     var avatar_url = elem.avatar_url;
     downloadImageByURL(avatar_url, file_path);
   }
-
 });
