@@ -5,6 +5,11 @@ var GITHUB_USER = 'turquoisemelon';
 var GITHUB_TOKEN = 'c870aa54065387d127ffcc86d26f81c905e9e9b2';
 
 function getRepoContributors(repoOwner, repoName, cb) {
+  if(!repoOwner || !repoName) {
+    console.log(`error: please provide the repo owner and repo name`);
+    return;
+  }
+
   var options = {
     uri: 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
     headers: {
@@ -22,9 +27,9 @@ function getRepoContributors(repoOwner, repoName, cb) {
     if (response.statusCode == 200) {
       console.log('Response Status Code: ', response.statusCode);
       var json = JSON.parse(body);
-      console.log('Parsed json is: ', json);
       cb(json);
     }
+    
   })
 }
 
@@ -35,7 +40,6 @@ function downloadImageByURL(url, filePath) {
   })
   .on('response', function (response) {
     console.log('Response Status Code: ', response.statusCode);
-    console.log('Downloading image...');
   })
   .pipe(fs.createWriteStream(filePath))
   .on('finish', function() {
@@ -44,9 +48,11 @@ function downloadImageByURL(url, filePath) {
 }
 
 getRepoContributors(process.argv[2], process.argv[3], function(something) {
+
   for (var elem of something) {
     var file_path = `avatars/${elem.login}`
     var avatar_url = elem.avatar_url;
     downloadImageByURL(avatar_url, file_path);
   }
+
 });
